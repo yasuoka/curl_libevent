@@ -181,7 +181,7 @@ curl_libevent_destroy(struct curl_libevent *self)
 		TAILQ_REMOVE(&self->curls, curl, next);
 		freezero(curl, sizeof(*curl));
 	}
-	free(sock);
+	free(self);
 }
 
 /* callback from libcurl */
