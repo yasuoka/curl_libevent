@@ -16,8 +16,9 @@
 #ifndef CURL_LIBEVENT_H
 #define CURL_LIBEVENT_H
 
-#include <curl/curl.h>
 #include <stdbool.h>
+#include <event.h>
+#include <curl/curl.h>
 
 #ifdef __cplusplus
 extern "C" {
