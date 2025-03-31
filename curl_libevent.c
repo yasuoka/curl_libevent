@@ -227,8 +227,8 @@ curl_libevent_perform(struct curl_libevent *self, CURL *handle,
 		TAILQ_INSERT_TAIL(&self->curls, curl, next);
 		return;
 	}
-#endif
  skip:
+#endif
 	curl_multi_add_handle(self->handle, handle);
 	TAILQ_INSERT_TAIL(&self->curls, curl, next);
 }
