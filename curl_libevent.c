@@ -69,6 +69,7 @@ struct curl_libevent_curl;
 struct curl_libevent {
 	CURLM			*handle;
 	struct event		 ev_timer;
+	struct event_base	*eb;
 	bool			 autoproxy;
 #ifdef _WIN32
 	HANDLE			 hHttpSession;
@@ -108,12 +109,13 @@ struct pair_event {
 #endif
 
 struct curl_libevent *
-curl_libevent_create(void)
+curl_libevent_create(struct event_base *eb)
 {
 	struct curl_libevent	*self;
 
 	self = xcalloc(1, sizeof(*self));
 	self->handle = curl_multi_init();
+	self->eb = eb;
 	TAILQ_INIT(&self->curls);
 	TAILQ_INIT(&self->socks);
 
@@ -124,6 +126,8 @@ curl_libevent_create(void)
 	curl_multi_setopt(self->handle, CURLMOPT_SOCKETDATA, self);
 	curl_multi_setopt(self->handle, CURLMOPT_TIMERDATA, self);
 	evtimer_set(&self->ev_timer, curl_libevent_on_timer, self);
+	if (self->eb != NULL)
+		event_base_set(self->eb, &self->ev_timer);
 
 #ifdef _WIN32
 	if ((self->hHttpSession = WinHttpOpen(L"curl_libevent",
@@ -140,6 +144,8 @@ curl_libevent_create(void)
 	if (evutil_socketpair(AF_UNIX, SOCK_STREAM, 0, self->pairs) != -1) {
 		event_set(&self->ev_pairs, self->pairs[0],
 		    EV_READ | EV_PERSIST, curl_libevent_on_pairs_event, self);
+		if (self->eb != NULL)
+			event_base_set(self->eb, &self->ev_pairs);
 		event_add(&self->ev_pairs, NULL);
 	}
 #endif
@@ -370,6 +376,8 @@ curl_libevent_set_events(CURL *easy, curl_socket_t sock, int action,
 		event_del(&self->ev_sock);
 
 	event_set(&self->ev_sock, sock, evmask, curl_libevent_on_event, self);
+	if (parent->eb != NULL)
+		event_base_set(parent->eb, &self->ev_sock);
 	event_add(&self->ev_sock, NULL);
 
 	return (0);

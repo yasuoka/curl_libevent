@@ -23,7 +23,7 @@ extern "C" {
 #endif
 struct curl_libevent;
 struct curl_libevent
-	*curl_libevent_create(void);
+	*curl_libevent_create(struct event_base *);
 void	 curl_libevent_set_auto_proxy_config(struct curl_libevent *, bool);
 
 void	 curl_libevent_perform(struct curl_libevent *, CURL *,
