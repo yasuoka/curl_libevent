@@ -16,6 +16,7 @@
 #ifndef CURL_LIBEVENT_H
 #define CURL_LIBEVENT_H
 
+#include <curl/curl.h>
 #include <stdbool.h>
 
 #ifdef __cplusplus
@@ -24,6 +25,7 @@ extern "C" {
 struct curl_libevent;
 struct curl_libevent
 	*curl_libevent_create(struct event_base *);
+CURLM	*curl_libevent_handle(struct curl_libevent *);
 void	 curl_libevent_set_auto_proxy_config(struct curl_libevent *, bool);
 
 void	 curl_libevent_perform(struct curl_libevent *, CURL *,

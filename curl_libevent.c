@@ -153,6 +153,12 @@ curl_libevent_create(struct event_base *eb)
 	return (self);
 }
 
+CURLM *
+curl_libevent_handle(struct curl_libevent *self)
+{
+	return (self->handle);
+}
+
 void
 curl_libevent_set_auto_proxy_config(struct curl_libevent *self, bool onoff)
 {
