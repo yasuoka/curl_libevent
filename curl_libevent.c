@@ -310,6 +310,16 @@ curl_libevent_destroy(struct curl_libevent *self)
 	struct curl_libevent_sock	*sock, *tsock;
 	struct curl_libevent_curl	*curl, *tcurl;
 
+	TAILQ_FOREACH_SAFE(curl, &self->curls, next, tcurl) {
+		TAILQ_REMOVE(&self->curls, curl, next);
+		curl_multi_remove_handle(self->handle, curl->handle);
+		curl_easy_cleanup(curl->handle);
+#ifdef _WIN32
+		if (curl->hProxyResolv != INVALID_HANDLE_VALUE)
+			WinHttpCloseHandle(curl->hProxyResolv);
+#endif
+		freezero(curl, sizeof(*curl));
+	}
 	curl_multi_cleanup(self->handle);
 
 	event_del(&self->ev_timer);
@@ -318,14 +328,7 @@ curl_libevent_destroy(struct curl_libevent *self)
 		event_del(&sock->ev_sock);
 		freezero(sock, sizeof(*sock));
 	}
-	TAILQ_FOREACH_SAFE(curl, &self->curls, next, tcurl) {
-		TAILQ_REMOVE(&self->curls, curl, next);
-#ifdef _WIN32
-		if (curl->hProxyResolv != INVALID_HANDLE_VALUE)
-			WinHttpCloseHandle(curl->hProxyResolv);
-#endif
-		freezero(curl, sizeof(*curl));
-	}
+
 #ifdef _WIN32
 	if (self->hHttpSession != INVALID_HANDLE_VALUE)
 		WinHttpCloseHandle(self->hHttpSession);
