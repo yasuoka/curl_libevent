@@ -1,6 +1,6 @@
 [submodule "win32/libevent"]
 	path = win32/libevent
 	url = https://github.com/libevent/libevent
-[submodule "win32\\curl"]
-	path = win32\\curl
+[submodule "win32/curl"]
+	path = win32/curl
 	url = https://github.com/curl/curl
