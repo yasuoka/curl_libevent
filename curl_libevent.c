@@ -21,10 +21,13 @@
 
 #include <sys/queue.h>
 
+#define xcalloc	curl_libevent_xcalloc
+#define xfree	curl_libevent_xfree
+
 #ifndef _WIN32
 #include <err.h>
 #include <unistd.h>
-#define xfree	free
+#define curl_libevent_xfree	free
 #endif
 #include <event.h>
 #include <stdlib.h>
@@ -411,7 +414,7 @@ curl_libevent_set_timer(CURLM *multi, long timeout_ms, void *userp)
 
 #ifndef _WIN32
 void *
-xcalloc(size_t nmemb, size_t size)
+curl_libevent_xcalloc(size_t nmemb, size_t size)
 {
 	void	*ret = calloc(nmemb, size);
 	if (ret == NULL)

@@ -21,8 +21,8 @@
 #include <curl/curl.h>
 #include "curl_libevent.h"
 
-void		*xcalloc(size_t, size_t);
-void		 xfree(void *);
+void		*curl_libevent_xcalloc(size_t, size_t);
+void		 curl_libevent_xfree(void *);
 static void	 curl_on_done(void *, CURLMsg *);
 
 static int	 ncurl = 0;
@@ -92,7 +92,7 @@ curl_on_done(void *ctx, CURLMsg *msg)
 }
 
 void *
-xcalloc(size_t nmemb, size_t siz)
+curl_libevent_xcalloc(size_t nmemb, size_t siz)
 {
         void    *ret;
         if (nmemb != 0 && SIZE_MAX / nmemb < siz)
@@ -104,7 +104,7 @@ xcalloc(size_t nmemb, size_t siz)
 }
 
 void
-xfree(void *ptr)
+curl_libevent_xfree(void *ptr)
 {
         if (ptr != NULL)
                 HeapFree(GetProcessHeap(), 0, ptr);
