@@ -1,7 +1,7 @@
 curl\_libevent - a glue of libcurl and libevent
 ===============================================
 
-curl\_libevent is a glue that makes your program to use
+curl\_libevent is a glue that makes your program can use
 [libcurl(3)](https://curl.se/libcurl/) asynchromously with
 [libevent(3)](https://libevent.org/).
 
