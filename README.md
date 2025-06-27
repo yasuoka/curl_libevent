@@ -5,6 +5,11 @@ curl\_libevent is a glue that makes your program can use
 [libcurl(3)](https://curl.se/libcurl/) asynchromously with
 [libevent(3)](https://libevent.org/).
 
+- Supports Windows
+  - Open `curl_libevent.sln` in win32 directory by Visual Studio
+  - Configure proxy automatically by using WinHTTP.  Call
+    `curl_libevent_set_auto_proxy_config(, true)`
+
 ## Example
 
 ```c
@@ -27,6 +32,8 @@ main(int argc, char *argv[])
 	evcurl = curl_libevent_create(eb);	// Add this
 	curl_global_init(CURL_GLOBAL_DEFAULT);
 	    :
+	// Configure proxy automatically if needed
+	curl_libevent_set_auto_proxy_config(evcurl, true);
 	event_loop();
 	    :
 	/* finalize */
@@ -49,3 +56,4 @@ main(int argc, char *argv[])
 ```
 
 See [test.c](./test.c) for a complete example.
+
